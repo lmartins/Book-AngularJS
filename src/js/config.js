@@ -1,8 +1,8 @@
 'use strict';
 
-var eventsApp = angular.module('eventsApp');
+var myApp = angular.module('myApp');
 
-eventsApp.config(function ($routeProvider) {
+myApp.config(function ($routeProvider) {
   $routeProvider.when('/about',
     {
       template: 'Hello World'

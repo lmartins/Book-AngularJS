@@ -1,6 +1,6 @@
 /*!
  * AngularJSFundamentals
- * 0.1.0:1407487862211 [development build]
+ * 0.1.0:1407510002170 [development build]
  */
 webpackJsonp([1],[
 /* 0 */
@@ -11,7 +11,7 @@ webpackJsonp([1],[
 	// var angular = require('angular');
 	__webpack_require__(6);
 	
-	var eventsApp = angular.module('eventsApp', ['ngSanitize', 'ngResource', 'ngCookies', 'ngRoute']);
+	var myApp = angular.module('myApp', ['ngSanitize', 'ngResource', 'ngCookies', 'ngRoute']);
 	
 	// CONTROLLERS ----------------------------------------------------------------
 	__webpack_require__(7);
@@ -35,59 +35,30 @@ webpackJsonp([1],[
 	// CONTROLLERS À LÁ CARTE
 	// Quick code snippets to be removed or placed in proper places
 	
-	eventsApp.controller('WorldCtrl',
-	  function ($scope) {
-	
-	    $scope.worldPopulation = 700;
-	    $scope.countries = [
-	      { name: 'France', population: 63.1 },
-	      { name: 'United Kingdom', population: 61.8 },
-	    ];
-	
-	    $scope.worldPercentage = function (countryPopulation) {
-	      return (countryPopulation / $scope.worldPopulation) * 100;
-	    }
-	
-	  }
-	);
-	
-	eventsApp.factory('Data', function () {
+	myApp.factory('Data', function () {
 	  return {
 	    message: 'Im data from a service'
 	  }
 	});
 	
-	eventsApp.controller('MainCtrl',
-	  function ($scope, Data) {
+	myApp.controller('MainCtrl',
+	  function ($scope, $location, Data) {
 	    $scope.data = Data;
 	  }
 	);
 	
-	eventsApp.controller('FirstCtrl',
-	  function ($scope, Data) {
-	    $scope.data = Data;
-	  }
-	);
 	
-	eventsApp.controller('TextAreaLimitCtrl',
-	  function ($scope) {
+	myApp.controller('CartController',
+	  function ($scope, $location, Data) {
+	    $scope.items = [
+	      {title: 'Paint pots', quantity: 8, price: 3.95 },
+	      {title: 'Plka dots', quantity: 17, price: 12.95 },
+	      {title: 'Pebbles', quantity: 5, price: 6.95 }
+	    ];
 	
-	    $scope.message = '';
-	
-	    $scope.remaining = function () {
-	      return 200 - $scope.message.length;
+	    $scope.remove = function (index) {
+	      $scope.items.splice(index, 1);
 	    };
-	
-	    $scope.shouldWarn = function () {
-	      return $scope.remaining() < 10;
-	    };
-	
-	  }
-	);
-	
-	eventsApp.controller('SecondCtrl',
-	  function ($scope, Data) {
-	    $scope.data = Data;
 	  }
 	);
 
@@ -315,9 +286,9 @@ webpackJsonp([1],[
 
 	'use strict';
 	
-	var eventsApp = angular.module('eventsApp');
+	var myApp = angular.module('myApp');
 	
-	eventsApp.config(function ($routeProvider) {
+	myApp.config(function ($routeProvider) {
 	  $routeProvider.when('/about',
 	    {
 	      template: 'Hello World'

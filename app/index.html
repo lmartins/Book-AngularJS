@@ -1,41 +1,24 @@
 <!DOCTYPE html>
-<html ng-app="eventsApp">
+<html ng-app="myApp">
 
 <head>
-  <title>Mastering AngularJS</title>
+  <title>Your Shopping Cart</title>
   <link rel="stylesheet" href="css/main.css" >
 </head>
 
 <body>
 
-  <div class="container" ng-controller="MainCtrl">
+  <div class="container" ng-controller="CartController">
 
-    <input type="text" ng-model="data.message">
-    <h1>Hello, {{data.message}}</h1>
-
-    <div ng-controller="FirstCtrl">
-      <input type="text" ng-model="data.message">
-      <h1>Hello, {{data.message}}</h1>
+    <h1>Your Shopping Cart</h1>
+    <div ng-repeat="item in items">
+      <span>{{ item.title }}</span>
+      <input type="number" ng-model="item.quantity">
+      <span>{{ item.price | currency }}</span>
+      <span>{{ item.price * item.quantity | currency }}</span>
+      <button ng-click="remove($index)">Remove</button>
     </div>
 
-    <div ng-controller="SecondCtrl">
-      <input type="text" ng-model="data.message">
-      <h1>Hello, {{data.message}}</h1>
-    </div>
-
-    <div ng-controller="TextAreaLimitCtrl">
-      <div ng-class="{ 'text-warning' : shouldWarn() }">Remaining: {{remaining()}}</div>
-      <textarea rows="3" ng-model="message">{{message}}</textarea>
-      <button ng-click="send()" ng-disabled="!hasValidLength()">Send</button>
-      <button ng-click="clear()">Clear</button>
-    </div>
-
-    <ul ng-controller="WorldCtrl">
-      <li ng-repeat="country in countries">
-        {{country.name}} has a population of {{country.population}} <br>
-        {{ worldPercentage(country.population) | number:2 }} % of the World's population
-      </li>
-    </ul>
 
   </div>
 
