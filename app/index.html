@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html ng-app="eventsApp">
+
+<head>
+  <title>Mastering AngularJS</title>
+  <link rel="stylesheet" href="css/main.css" >
+</head>
+
+<body>
+
+  <div class="container" ng-controller="MainCtrl">
+
+    <input type="text" ng-model="data.message">
+    <h1>Hello, {{data.message}}</h1>
+
+    <div ng-controller="FirstCtrl">
+      <input type="text" ng-model="data.message">
+      <h1>Hello, {{data.message}}</h1>
+    </div>
+
+    <div ng-controller="SecondCtrl">
+      <input type="text" ng-model="data.message">
+      <h1>Hello, {{data.message}}</h1>
+    </div>
+
+    <div ng-controller="TextAreaLimitCtrl">
+      <div ng-class="{ 'text-warning' : shouldWarn() }">Remaining: {{remaining()}}</div>
+      <textarea rows="3" ng-model="message">{{message}}</textarea>
+      <button ng-click="send()" ng-disabled="!hasValidLength()">Send</button>
+      <button ng-click="clear()">Clear</button>
+    </div>
+
+    <ul ng-controller="WorldCtrl">
+      <li ng-repeat="country in countries">
+        {{country.name}} has a population of {{country.population}} <br>
+        {{ worldPercentage(country.population) | number:2 }} % of the World's population
+      </li>
+    </ul>
+
+  </div>
+
+  <script src="//cdn.jsdelivr.net/jquery/2.1.1/jquery.min.js"></script>
+  <script src="js/vendor.bundle.js"></script>
+  <script src="js/main.bundle.js"></script>
+
+</body>
+</html>
