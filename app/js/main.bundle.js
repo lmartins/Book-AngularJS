@@ -1,6 +1,6 @@
 /*!
  * AngularJSFundamentals
- * 0.1.0:1407510002170 [development build]
+ * 0.1.0:1407520569862 [development build]
  */
 webpackJsonp([1],[
 /* 0 */
@@ -59,6 +59,27 @@ webpackJsonp([1],[
 	    $scope.remove = function (index) {
 	      $scope.items.splice(index, 1);
 	    };
+	  }
+	);
+	
+	myApp.controller('StartUpController',
+	  function ($scope) {
+	    $scope.funding = {startingEstimate: 0};
+	
+	    var computeNeeded = function () {
+	      $scope.funding.needed = $scope.funding.startingEstimate * 10;
+	    };
+	
+	    $scope.$watch('funding.startingEstimate', computeNeeded);
+	
+	    $scope.requestFunding = function () {
+	      console.log('Sorry, please get more clients first.');
+	    }
+	
+	    $scope.reset = function () {
+	      $scope.funding.startingEstimate = 0;
+	    }
+	
 	  }
 	);
 
