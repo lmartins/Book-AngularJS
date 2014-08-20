@@ -27,3 +27,18 @@ input.ng-invalid.ng-dirty{
 [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
   display: none !important;
 }
+
+.menu-disabled-true{
+  color: grey;
+}
+
+.error{
+  background: red;
+}
+.warning{
+  background: orange;
+}
+
+.selected{
+  background-color: lightgreen;
+}

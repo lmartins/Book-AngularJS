@@ -42,6 +42,6 @@ myApp.config(function ($routeProvider) {
       }
     }
   );
-  $routeProvider.otherwise({redirectTo: '/events'});
+  $routeProvider.otherwise({redirectTo: '/'});
   // $locationProvider.html5Mode(true);
 });

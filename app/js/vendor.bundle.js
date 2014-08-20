@@ -1,6 +1,6 @@
 /*!
  * AngularJSFundamentals
- * 0.1.0:1407520569862 [development build]
+ * 0.1.0:1408530471266 [development build]
  */
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// install a JSONP callback for chunk loading
@@ -34,7 +34,7 @@
 /******/ 	// "0" means "already loaded"
 /******/ 	// Array means "loading", array contains callbacks
 /******/ 	var installedChunks = {
-/******/ 		0:0
+/******/ 		1:0
 /******/ 	};
 /******/
 /******/ 	// The require function
@@ -100,19 +100,23 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__(1);
-	__webpack_require__(2);
-	__webpack_require__(3);
-	__webpack_require__(4);
-	module.exports = __webpack_require__(5);
+	__webpack_require__(5);
+	__webpack_require__(6);
+	__webpack_require__(7);
+	__webpack_require__(8);
+	module.exports = __webpack_require__(9);
 
 
 /***/ },
-/* 1 */
+/* 1 */,
+/* 2 */,
+/* 3 */,
+/* 4 */,
+/* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var require;/**
-	 * @license AngularJS v1.2.21
+	 * @license AngularJS v1.2.22
 	 * (c) 2010-2014 Google, Inc. http://angularjs.org
 	 * License: MIT
 	 */
@@ -181,7 +185,7 @@
 	      return match;
 	    });
 	
-	    message = message + '\nhttp://errors.angularjs.org/1.2.21/' +
+	    message = message + '\nhttp://errors.angularjs.org/1.2.22/' +
 	      (module ? module + '/' : '') + code;
 	    for (i = 2; i < arguments.length; i++) {
 	      message = message + (i == 2 ? '?' : '&') + 'p' + (i-2) + '=' +
@@ -2090,11 +2094,11 @@
 	 * - `codeName` – `{string}` – Code name of the release, such as "jiggling-armfat".
 	 */
 	var version = {
-	  full: '1.2.21',    // all of these placeholder strings will be replaced by grunt's
+	  full: '1.2.22',    // all of these placeholder strings will be replaced by grunt's
 	  major: 1,    // package task
 	  minor: 2,
-	  dot: 21,
-	  codeName: 'wizard-props'
+	  dot: 22,
+	  codeName: 'finicky-pleasure'
 	};
 	
 	
@@ -2107,11 +2111,11 @@
 	    'element': jqLite,
 	    'forEach': forEach,
 	    'injector': createInjector,
-	    'noop':noop,
-	    'bind':bind,
+	    'noop': noop,
+	    'bind': bind,
 	    'toJson': toJson,
 	    'fromJson': fromJson,
-	    'identity':identity,
+	    'identity': identity,
 	    'isUndefined': isUndefined,
 	    'isDefined': isDefined,
 	    'isString': isString,
@@ -3170,21 +3174,37 @@
 	
 	  clone: jqLiteClone,
 	
-	  triggerHandler: function(element, eventName, eventData) {
-	    // Copy event handlers in case event handlers array is modified during execution.
-	    var eventFns = (jqLiteExpandoStore(element, 'events') || {})[eventName],
-	        eventFnsCopy = shallowCopy(eventFns || []);
+	  triggerHandler: function(element, event, extraParameters) {
 	
-	    eventData = eventData || [];
+	    var dummyEvent, eventFnsCopy, handlerArgs;
+	    var eventName = event.type || event;
+	    var eventFns = (jqLiteExpandoStore(element, 'events') || {})[eventName];
 	
-	    var event = [{
-	      preventDefault: noop,
-	      stopPropagation: noop
-	    }];
+	    if (eventFns) {
 	
-	    forEach(eventFnsCopy, function(fn) {
-	      fn.apply(element, event.concat(eventData));
-	    });
+	      // Create a dummy event to pass to the handlers
+	      dummyEvent = {
+	        preventDefault: function() { this.defaultPrevented = true; },
+	        isDefaultPrevented: function() { return this.defaultPrevented === true; },
+	        stopPropagation: noop,
+	        type: eventName,
+	        target: element
+	      };
+	
+	      // If a custom event was provided then extend our dummy event with it
+	      if (event.type) {
+	        dummyEvent = extend(dummyEvent, event);
+	      }
+	
+	      // Copy event handlers in case event handlers array is modified during execution.
+	      eventFnsCopy = shallowCopy(eventFns);
+	      handlerArgs = extraParameters ? [dummyEvent].concat(extraParameters) : [dummyEvent];
+	
+	      forEach(eventFnsCopy, function(fn) {
+	        fn.apply(element, handlerArgs);
+	      });
+	
+	    }
 	  }
 	}, function(fn, name){
 	  /**
@@ -5429,7 +5449,7 @@
 	 *
 	 * #### `template`
 	 * HTML markup that may:
-	 * * Replace the contents of the directive's element (defualt).
+	 * * Replace the contents of the directive's element (default).
 	 * * Replace the directive's element itself (if `replace` is true - DEPRECATED).
 	 * * Wrap the contents of the directive's element (if `transclude` is true).
 	 *
@@ -6689,7 +6709,7 @@
 	                if (parentGet.literal) {
 	                  compare = equals;
 	                } else {
-	                  compare = function(a,b) { return a === b; };
+	                  compare = function(a,b) { return a === b || (a !== a && b !== b); };
 	                }
 	                parentSet = parentGet.assign || function() {
 	                  // reset the change, or we will throw this exception on every $digest
@@ -7717,6 +7737,7 @@
 	     * - {@link ng.$http#put $http.put}
 	     * - {@link ng.$http#delete $http.delete}
 	     * - {@link ng.$http#jsonp $http.jsonp}
+	     * - {@link ng.$http#patch $http.patch}
 	     *
 	     *
 	     * # Setting HTTP Headers
@@ -8018,7 +8039,7 @@
 	     *    - **timeout** – `{number|Promise}` – timeout in milliseconds, or {@link ng.$q promise}
 	     *      that should abort the request when resolved.
 	     *    - **withCredentials** - `{boolean}` - whether to set the `withCredentials` flag on the
-	     *      XHR object. See [requests with credentials]https://developer.mozilla.org/en/http_access_control#section_5
+	     *      XHR object. See [requests with credentials](https://developer.mozilla.org/docs/Web/HTTP/Access_control_CORS#Requests_with_credentials)
 	     *      for more information.
 	     *    - **responseType** - `{string}` - see
 	     *      [requestType](https://developer.mozilla.org/en-US/docs/DOM/XMLHttpRequest#responseType).
@@ -8387,7 +8408,8 @@
 	      promise.then(removePendingReq, removePendingReq);
 	
 	
-	      if ((config.cache || defaults.cache) && config.cache !== false && config.method == 'GET') {
+	      if ((config.cache || defaults.cache) && config.cache !== false &&
+	          (config.method === 'GET' || config.method === 'JSONP')) {
 	        cache = isObject(config.cache) ? config.cache
 	              : isObject(defaults.cache) ? defaults.cache
 	              : defaultCache;
@@ -9859,6 +9881,8 @@
 	    $location = new LocationMode(appBase, '#' + hashPrefix);
 	    $location.$$parse($location.$$rewrite(initialUrl));
 	
+	    var IGNORE_URI_REGEXP = /^\s*(javascript|mailto):/i;
+	
 	    $rootElement.on('click', function(event) {
 	      // TODO(vojta): rewrite link when opening in new tab/window (in legacy browser)
 	      // currently we open nice url link and redirect then
@@ -9880,6 +9904,9 @@
 	        // an animation.
 	        absHref = urlResolve(absHref.animVal).href;
 	      }
+	
+	      // Ignore when url is started with javascript: or mailto:
+	      if (IGNORE_URI_REGEXP.test(absHref)) return;
 	
 	      // Make relative links work in HTML5 mode for legacy browsers (or at least IE8 & 9)
 	      // The href should be a regular url e.g. /link/somewhere or link/somewhere or ../somewhere or
@@ -10752,9 +10779,9 @@
 	    var middle;
 	    var token;
 	    if ((token = this.expect('?'))) {
-	      middle = this.ternary();
+	      middle = this.assignment();
 	      if ((token = this.expect(':'))) {
-	        return this.ternaryFn(left, middle, this.ternary());
+	        return this.ternaryFn(left, middle, this.assignment());
 	      } else {
 	        this.throwError('expected :', token);
 	      }
@@ -10842,7 +10869,9 @@
 	      return getter(self || object(scope, locals));
 	    }, {
 	      assign: function(scope, value, locals) {
-	        return setter(object(scope, locals), field, value, parser.text, parser.options);
+	        var o = object(scope, locals);
+	        if (!o) object.assign(scope, o = {});
+	        return setter(o, field, value, parser.text, parser.options);
 	      }
 	    });
 	  },
@@ -10872,10 +10901,11 @@
 	      return v;
 	    }, {
 	      assign: function(self, value, locals) {
-	        var key = indexFn(self, locals);
+	        var key = ensureSafeMemberName(indexFn(self, locals), parser.text);
 	        // prevent overwriting of Function.constructor which would break ensureSafeObject check
-	        var safe = ensureSafeObject(obj(self, locals), parser.text);
-	        return safe[key] = value;
+	        var o = ensureSafeObject(obj(self, locals), parser.text);
+	        if (!o) obj.assign(self, o = {});
+	        return o[key] = value;
 	      }
 	    });
 	  },
@@ -15241,7 +15271,7 @@
 	 *   (e.g. `"h 'o''clock'"`).
 	 *
 	 * @param {(Date|number|string)} date Date to format either as Date object, milliseconds (string or
-	 *    number) or various ISO 8601 datetime string formats (e.g. yyyy-MM-ddTHH:mm:ss.SSSZ and its
+	 *    number) or various ISO 8601 datetime string formats (e.g. yyyy-MM-ddTHH:mm:ss.sssZ and its
 	 *    shorter versions like yyyy-MM-ddTHH:mmZ, yyyy-MM-dd or yyyyMMddTHHmmssZ). If no timezone is
 	 *    specified in the string input, the time is considered to be in the local timezone.
 	 * @param {string=} format Formatting rules (see Description). If not specified,
@@ -19405,6 +19435,13 @@
 	 * server and reloading the current page), but only if the form does not contain `action`,
 	 * `data-action`, or `x-action` attributes.
 	 *
+	 * <div class="alert alert-warning">
+	 * **Warning:** Be careful not to cause "double-submission" by using both the `ngClick` and
+	 * `ngSubmit` handlers together. See the
+	 * {@link form#submitting-a-form-and-preventing-the-default-action `form` directive documentation}
+	 * for a detailed discussion of when `ngSubmit` may be triggered.
+	 * </div>
+	 *
 	 * @element form
 	 * @priority 0
 	 * @param {expression} ngSubmit {@link guide/expression Expression} to eval.
@@ -21722,21 +21759,37 @@
 	                  value = valueFn(scope, locals);
 	                }
 	              }
-	              // Update the null option's selected property here so $render cleans it up correctly
-	              if (optionGroupsCache[0].length > 1) {
-	                if (optionGroupsCache[0][1].id !== key) {
-	                  optionGroupsCache[0][1].selected = false;
-	                }
-	              }
 	            }
 	            ctrl.$setViewValue(value);
+	            render();
 	          });
 	        });
 	
 	        ctrl.$render = render;
 	
-	        // TODO(vojta): can't we optimize this ?
-	        scope.$watch(render);
+	        scope.$watchCollection(valuesFn, render);
+	        if ( multiple ) {
+	          scope.$watchCollection(function() { return ctrl.$modelValue; }, render);
+	        }
+	
+	        function getSelectedSet() {
+	          var selectedSet = false;
+	          if (multiple) {
+	            var modelValue = ctrl.$modelValue;
+	            if (trackFn && isArray(modelValue)) {
+	              selectedSet = new HashMap([]);
+	              var locals = {};
+	              for (var trackIndex = 0; trackIndex < modelValue.length; trackIndex++) {
+	                locals[valueName] = modelValue[trackIndex];
+	                selectedSet.put(trackFn(scope, locals), modelValue[trackIndex]);
+	              }
+	            } else {
+	              selectedSet = new HashMap(modelValue);
+	            }
+	          }
+	          return selectedSet;
+	        }
+	
 	
 	        function render() {
 	              // Temporary location for the option groups before we render them
@@ -21754,22 +21807,11 @@
 	              groupIndex, index,
 	              locals = {},
 	              selected,
-	              selectedSet = false, // nothing is selected yet
+	              selectedSet = getSelectedSet(),
 	              lastElement,
 	              element,
 	              label;
 	
-	          if (multiple) {
-	            if (trackFn && isArray(modelValue)) {
-	              selectedSet = new HashMap([]);
-	              for (var trackIndex = 0; trackIndex < modelValue.length; trackIndex++) {
-	                locals[valueName] = modelValue[trackIndex];
-	                selectedSet.put(trackFn(scope, locals), modelValue[trackIndex]);
-	              }
-	            } else {
-	              selectedSet = new HashMap(modelValue);
-	            }
-	          }
 	
 	          // We now build up the list of options we need (we merge later)
 	          for (index = 0; length = keys.length, index < length; index++) {
@@ -21865,7 +21907,7 @@
 	                  lastElement.val(existingOption.id = option.id);
 	                }
 	                // lastElement.prop('selected') provided by jQuery has side-effects
-	                if (existingOption.selected !== option.selected) {
+	                if (lastElement[0].selected !== option.selected) {
 	                  lastElement.prop('selected', (existingOption.selected = option.selected));
 	                  if (msie) {
 	                    // See #7692
@@ -21888,6 +21930,7 @@
 	                  (element = optionTemplate.clone())
 	                      .val(option.id)
 	                      .prop('selected', option.selected)
+	                      .attr('selected', option.selected)
 	                      .text(option.label);
 	                }
 	
@@ -21996,11 +22039,11 @@
 	!window.angular.$$csp() && window.angular.element(document).find('head').prepend('<style type="text/css">@charset "UTF-8";[ng\\:cloak],[ng-cloak],[data-ng-cloak],[x-ng-cloak],.ng-cloak,.x-ng-cloak,.ng-hide{display:none !important;}ng\\:form{display:block;}.ng-animate-block-transitions{transition:0s all!important;-webkit-transition:0s all!important;}.ng-hide-add-active,.ng-hide-remove{display:block!important;}</style>');
 
 /***/ },
-/* 2 */
+/* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
-	 * @license AngularJS v1.2.21
+	 * @license AngularJS v1.2.22
 	 * (c) 2010-2014 Google, Inc. http://angularjs.org
 	 * License: MIT
 	 */
@@ -22100,8 +22143,10 @@
 	 *   Given a template `/path/:verb` and parameter `{verb:'greet', salutation:'Hello'}` results in
 	 *   URL `/path/greet?salutation=Hello`.
 	 *
-	 *   If the parameter value is prefixed with `@` then the value of that parameter will be taken
-	 *   from the corresponding key on the data object (useful for non-GET operations).
+	 *   If the parameter value is prefixed with `@` then the value for that parameter will be extracted
+	 *   from the corresponding property on the `data` object (provided when calling an action method).  For
+	 *   example, if the `defaultParam` object is `{someParam: '@someProp'}` then the value of `someParam`
+	 *   will be `data.someProp`.
 	 *
 	 * @param {Object.<Object>=} actions Hash with declaration of custom action that should extend
 	 *   the default set of resource actions. The declaration should be created in the format of {@link
@@ -22621,11 +22666,11 @@
 
 
 /***/ },
-/* 3 */
+/* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
-	 * @license AngularJS v1.2.21
+	 * @license AngularJS v1.2.22
 	 * (c) 2010-2014 Google, Inc. http://angularjs.org
 	 * License: MIT
 	 */
@@ -23552,11 +23597,11 @@
 
 
 /***/ },
-/* 4 */
+/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
-	 * @license AngularJS v1.2.21
+	 * @license AngularJS v1.2.22
 	 * (c) 2010-2014 Google, Inc. http://angularjs.org
 	 * License: MIT
 	 */
@@ -23794,6 +23839,13 @@
 	 * @param {object} handler
 	 */
 	function htmlParser( html, handler ) {
+	  if (typeof html !== 'string') {
+	    if (html === null || typeof html === 'undefined') {
+	      html = '';
+	    } else {
+	      html = '' + html;
+	    }
+	  }
 	  var index, chars, match, stack = [], last = html, text;
 	  stack.last = function() { return stack[ stack.length - 1 ]; };
 	
@@ -24198,7 +24250,7 @@
 
 
 /***/ },
-/* 5 */
+/* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';

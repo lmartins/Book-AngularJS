@@ -8,6 +8,9 @@ var myApp = angular.module('myApp', ['ngSanitize', 'ngResource', 'ngCookies', 'n
 // CONTROLLERS ----------------------------------------------------------------
 require('./config');
 
+// CART -----------------------------------------------------------------
+require('./cart/services/items.js');
+
 // HELLO WORD -----------------------------------------------------------------
 // require('./HelloWorld/controllers/helloWorldCtrl.js');
 
@@ -27,11 +30,6 @@ require('./config');
 // CONTROLLERS À LÁ CARTE
 // Quick code snippets to be removed or placed in proper places
 
-myApp.factory('Data', function () {
-  return {
-    message: 'Im data from a service'
-  }
-});
 
 myApp.controller('MainCtrl',
   function ($scope, $location, Data) {
@@ -41,16 +39,27 @@ myApp.controller('MainCtrl',
 
 
 myApp.controller('CartController',
-  function ($scope, $location, Data) {
-    $scope.items = [
-      {title: 'Paint pots', quantity: 8, price: 3.95 },
-      {title: 'Plka dots', quantity: 17, price: 12.95 },
-      {title: 'Pebbles', quantity: 5, price: 6.95 }
-    ];
+  function ($scope, $location, Items) {
+
+    $scope.bill = {};
+    $scope.items = Items.query();
 
     $scope.remove = function (index) {
       $scope.items.splice(index, 1);
     };
+
+    var calculateTotals = function () {
+      var total = 0;
+      for (var i = 0; i < $scope.items.length; i++) {
+        total = total + $scope.items[i].price * $scope.items[i].quantity;
+      }
+      $scope.bill.total = total;
+      $scope.bill.discount = total > 200 ? 10 : 0;
+      $scope.bill.subtotal = total - $scope.bill.discount;
+    }
+
+    $scope.$watch('items', calculateTotals, true);
+
   }
 );
 
@@ -74,3 +83,20 @@ myApp.controller('StartUpController',
 
   }
 );
+
+
+myApp.controller('MenuCtrl', function ($scope) {
+  $scope.isDisabled = false;
+  $scope.menuState = {
+    show: false
+  };
+
+  $scope.toggleMenu = function () {
+    $scope.menuState.show = !$scope.menuState.show;
+  };
+  $scope.stun = function () {
+    // do something
+    $scope.isDisabled = true;
+  };
+
+});

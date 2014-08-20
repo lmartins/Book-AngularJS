@@ -84,6 +84,7 @@ var webpackConfig = {
   devtool: 'source-map',
   entry: {
     main: './src/js/app.js',
+    mail: './src/js/mail.js',
     vendor: ['angular', 'angular-resource', 'angular-route', 'angular-sanitize',  'locale']
   },
   output: {

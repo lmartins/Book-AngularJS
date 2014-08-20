@@ -1,20 +1,23 @@
 /*!
  * AngularJSFundamentals
- * 0.1.0:1407520569862 [development build]
+ * 0.1.0:1408530471266 [development build]
  */
-webpackJsonp([1],[
+webpackJsonp([0],[
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	// var angular = require('angular');
-	__webpack_require__(6);
+	__webpack_require__(1);
 	
 	var myApp = angular.module('myApp', ['ngSanitize', 'ngResource', 'ngCookies', 'ngRoute']);
 	
 	// CONTROLLERS ----------------------------------------------------------------
-	__webpack_require__(7);
+	__webpack_require__(2);
+	
+	// CART -----------------------------------------------------------------
+	__webpack_require__(3);
 	
 	// HELLO WORD -----------------------------------------------------------------
 	// require('./HelloWorld/controllers/helloWorldCtrl.js');
@@ -35,11 +38,6 @@ webpackJsonp([1],[
 	// CONTROLLERS À LÁ CARTE
 	// Quick code snippets to be removed or placed in proper places
 	
-	myApp.factory('Data', function () {
-	  return {
-	    message: 'Im data from a service'
-	  }
-	});
 	
 	myApp.controller('MainCtrl',
 	  function ($scope, $location, Data) {
@@ -49,16 +47,27 @@ webpackJsonp([1],[
 	
 	
 	myApp.controller('CartController',
-	  function ($scope, $location, Data) {
-	    $scope.items = [
-	      {title: 'Paint pots', quantity: 8, price: 3.95 },
-	      {title: 'Plka dots', quantity: 17, price: 12.95 },
-	      {title: 'Pebbles', quantity: 5, price: 6.95 }
-	    ];
+	  function ($scope, $location, Items) {
+	
+	    $scope.bill = {};
+	    $scope.items = Items.query();
 	
 	    $scope.remove = function (index) {
 	      $scope.items.splice(index, 1);
 	    };
+	
+	    var calculateTotals = function () {
+	      var total = 0;
+	      for (var i = 0; i < $scope.items.length; i++) {
+	        total = total + $scope.items[i].price * $scope.items[i].quantity;
+	      }
+	      $scope.bill.total = total;
+	      $scope.bill.discount = total > 200 ? 10 : 0;
+	      $scope.bill.subtotal = total - $scope.bill.discount;
+	    }
+	
+	    $scope.$watch('items', calculateTotals, true);
+	
 	  }
 	);
 	
@@ -82,19 +91,31 @@ webpackJsonp([1],[
 	
 	  }
 	);
+	
+	
+	myApp.controller('MenuCtrl', function ($scope) {
+	  $scope.isDisabled = false;
+	  $scope.menuState = {
+	    show: false
+	  };
+	
+	  $scope.toggleMenu = function () {
+	    $scope.menuState.show = !$scope.menuState.show;
+	  };
+	  $scope.stun = function () {
+	    // do something
+	    $scope.isDisabled = true;
+	  };
+	
+	});
 
 
 /***/ },
-/* 1 */,
-/* 2 */,
-/* 3 */,
-/* 4 */,
-/* 5 */,
-/* 6 */
+/* 1 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
-	 * @license AngularJS v1.2.21
+	 * @license AngularJS v1.2.22
 	 * (c) 2010-2014 Google, Inc. http://angularjs.org
 	 * License: MIT
 	 */
@@ -302,7 +323,7 @@ webpackJsonp([1],[
 
 
 /***/ },
-/* 7 */
+/* 2 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -349,8 +370,29 @@ webpackJsonp([1],[
 	      }
 	    }
 	  );
-	  $routeProvider.otherwise({redirectTo: '/events'});
+	  $routeProvider.otherwise({redirectTo: '/'});
 	  // $locationProvider.html5Mode(true);
+	});
+
+
+/***/ },
+/* 3 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var myApp = angular.module('myApp');
+	myApp.factory('Items', function () {
+	  var items = {};
+	  items.query = function () {
+	    // in real apps we'de pull this data from the server
+	    return [
+	      {title: 'Paint pots', quantity: 8, price: 3.95 },
+	      {title: 'Plka dots', quantity: 17, price: 12.95 },
+	      {title: 'Pebbles', quantity: 5, price: 6.95 }
+	    ]
+	  }
+	  return items;
 	});
 
 
